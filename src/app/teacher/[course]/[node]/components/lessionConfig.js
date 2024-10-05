@@ -1,5 +1,5 @@
 'use client'
-import React, { useState} from 'react'
+import React, { useEffect, useState} from 'react'
 import { useRouter } from 'next/navigation'
 import Editor from '@/app/utils/puckEditor/editor'
 import { initialData } from '@/app/utils/puckEditor/config'
@@ -8,6 +8,14 @@ import EditorQuiz from '@/app/utils/puckEditor/editor quiz'
 const LessionConfig = ({chapter, params, type}) => {
   const [data, setData] = useState(chapter?chapter.data?chapter.data:initialData:initialData)
   const router = useRouter()
+
+  const goBackAndReload = () => {
+    router.back(); // Go back to the previous page
+    setTimeout(() => {
+      window.location.reload(); // Reload the page after navigating back
+    }, 100); // Slight delay to ensure the navigation happens before reload
+  };
+  
 
   const addData = async () => {
     const res = await fetch(`/api/addDataChapter`, {
@@ -23,7 +31,8 @@ const LessionConfig = ({chapter, params, type}) => {
 
     const result = await res.json()
     
-    router.push(`/teacher/${params.course}?timestamp=${Date.now()}`);
+    goBackAndReload();
+    
     
 
   }
