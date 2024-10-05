@@ -10,7 +10,7 @@ const LessionConfig = ({chapter, params, type}) => {
   const router = useRouter()
 
   const addData = async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/addDataChapter`, {
+    const res = await fetch(`/api/addDataChapter`, {
     method: "POST",
     headers: {
       'Content-Type': 'application/json'
