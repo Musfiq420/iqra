@@ -213,6 +213,8 @@ const MCQ = ({instruction, text, explanation, style, addMark, addTotal}) => {
                       borderRadius: "5px",
                       padding: "3px",
                       backgroundColor: "white", 
+                      fontSize:'20px',
+                      cursor: 'pointer',
                       border:answers[partNo].value.includes(option)&&answers[partNo].correct.includes(option)?"2px solid lightgreen":answers[partNo].value.includes(option)?"2px solid red":"1px solid lightgrey"}}
                       onClick={() => {
                         let clicked = false;
@@ -333,7 +335,7 @@ const MCQ = ({instruction, text, explanation, style, addMark, addTotal}) => {
     }
     {
       allDone&&explanation?
-      <div style={{marginTop:"5px", backgroundColor:"#fef8ff", padding:'5px', borderRadius:"2px", boxShadow:"0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19)"}}>  
+      <div style={{marginTop:"5px", backgroundColor:"#fef8ff", padding:'5px', borderRadius:"2px"}}>  
         <p style={{opacity:0.4, fontSize:12, paddingBottom:'5px'}}>Explanation</p>
         <MdText>{explanation}</MdText>
       </div>

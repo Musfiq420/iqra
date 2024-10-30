@@ -29,6 +29,7 @@ const Editor = ({data, setData}) => {
             <Drawer.Item name="ImageHotspot" index={3} />
             <Drawer.Item name="TabbedView" index={4} />
             <Drawer.Item name="Accordion" index={5} />
+            <Drawer.Item name="RiveAnim" index={6} />
             </div>
           </Drawer>
         </div>

@@ -2,6 +2,7 @@ import Accordion from "@/app/student/[course]/[node]/components/accordion";
 import IFrame from "@/app/student/[course]/[node]/components/iframe";
 import ImageHotspot from "@/app/student/[course]/[node]/components/image_hotspot";
 import MCQ from "@/app/student/[course]/[node]/components/mcq";
+import RiveComponent from "@/app/student/[course]/[node]/components/rive";
 import TabbedView from "@/app/student/[course]/[node]/components/tabbedView";
 
 
@@ -127,6 +128,24 @@ body`,
       render: ({ sections }) => {
         return <Accordion data={sections}  />;
       },
+      
+    },
+
+    RiveAnim: {
+      fields: {
+        src: {
+          type: "text",
+        },
+        instruction: {
+          type: "textarea",
+        }
+      },
+      defaultProps: {
+        src: "Src"
+      },
+      render: ({ src, instruction }) => {
+        return <RiveComponent src={src} instruction={instruction} />;
+      }, 
       
     },
     

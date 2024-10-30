@@ -18,11 +18,13 @@ const imgCustom = (imageData) => {
 
   console.log(imageData);
   return (
+    <div style={{display:"flex", justifyContent:"center", alignItems:"center"}}>
       <img
         src={imageData.src?imageData.src:""}
         width={width}
         height={height}
       />
+    </div>
   )
 }
 
