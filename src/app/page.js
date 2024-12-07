@@ -7,6 +7,7 @@ import { SignInStudent } from './signIn';
 import Anim from '../lib/anim.gif';
 
 export default async function Home() {
+
   const session = await getServerSession(authOptions);
 
   return (

@@ -1,0 +1,30 @@
+/* Loader container styling */
+.loaderContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh; /* Fullscreen height */
+    background-color: white; /* Subtle background color */
+  }
+  
+  /* Circular loader animation */
+  .loader {
+    width: 80px; /* Size of the loader */
+    height: 80px;
+    border: 8px solid #e0e0e0; /* Light gray border */
+    border-top: 8px solid #5e3770; /* Blue progress border */
+    border-radius: 50%; /* Make it circular */
+    animation: spin 1.2s linear infinite;
+  }
+  
+  /* Spin animation */
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
