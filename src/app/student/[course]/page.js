@@ -63,7 +63,7 @@ const Course = async ({ params }) => {
           ) : null
         ) : (
           <div className={styles.signInMessage}>
-            <SignInStudent stl={{ padding: '10px', backgroundColor: '#9757b5', color: 'white', borderRadius: '5px', border: 'none', cursor: 'pointer' }} />
+            <SignInStudent className={styles.button} />
           </div>
         )}
         {chaptersFinal.map((e) =>             

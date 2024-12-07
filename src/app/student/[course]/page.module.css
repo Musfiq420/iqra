@@ -58,6 +58,16 @@
     padding: 20px;
     text-align: center;
   }
+
+  .button {
+    margin-top: 10px;
+    background-color: #9757b5;
+    padding: 10px;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 5px 0;
+  }
   
   .chapter {
     margin: 10px 0;

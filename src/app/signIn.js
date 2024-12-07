@@ -2,11 +2,11 @@
 import React from 'react'
 import { signIn } from 'next-auth/react'
 
-export const SignInStudent = ({stl}) => {
+export const SignInStudent = ({className}) => {
   return (
-    <button style={stl} onClick={async() => {
+    <div className={className} onClick={async() => {
       await signIn("student");
-    }}>Sign in</button>
+    }}>Sign in</div>
       
   )
 }

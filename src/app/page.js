@@ -30,11 +30,11 @@ export default async function Home() {
             <div className={styles.actions}>
               {!session ? (
                 <div>
-                  <SignInStudent stl={styles.button} />
+                  <SignInStudent className={styles.button} />
                 </div>
               ) : (
                 <div style={{ color: 'gray' }}>
-                  <p style={{ fontSize: '12px' }}>Signed in as</p>
+                  <p style={{ fontSize: 12 }}>Signed in as</p>
                   <p>{session.user.name}</p>
                 </div>
               )}
