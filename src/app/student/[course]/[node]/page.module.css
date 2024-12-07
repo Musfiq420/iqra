@@ -107,7 +107,6 @@
     background-color: white;
     overflow-y: auto;
     height: 100vh;
-    z-index: 1000;
   }
     
     .floatingButton {
@@ -126,7 +125,6 @@
 
     .content {
        width: 100%;
-       z-index: 0;
     }
   
     .chapter {
