@@ -32,7 +32,7 @@ const MdText = ({children}) => {
   
   return (
     // <div style={{paddingLeft:"10px", paddingTop:"5px", paddingBottom:"5px", marginLeft:"10px"}}>
-    <div>  
+    <div style={{overflowY:"scroll",}}>  
       <Markdown components={{ img: imgCustom }} remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex, rehypeRaw]} >{children}</Markdown>
     </div>
   )

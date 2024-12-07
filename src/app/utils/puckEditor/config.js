@@ -2,6 +2,7 @@ import Accordion from "@/app/student/[course]/[node]/components/accordion";
 import IFrame from "@/app/student/[course]/[node]/components/iframe";
 import ImageHotspot from "@/app/student/[course]/[node]/components/image_hotspot";
 import MCQ from "@/app/student/[course]/[node]/components/mcq";
+import Model3D from "@/app/student/[course]/[node]/components/model3d";
 import RiveComponent from "@/app/student/[course]/[node]/components/rive";
 import TabbedView from "@/app/student/[course]/[node]/components/tabbedView";
 
@@ -145,6 +146,69 @@ body`,
       },
       render: ({ src, instruction }) => {
         return <RiveComponent src={src} instruction={instruction} />;
+      }, 
+      
+    },
+
+    Model3D: {
+      fields: {
+        src: {
+          type: "text",
+        },
+        
+        pos: {
+          type: "text"
+        },
+        rot: {
+          type: "text"
+        },
+        tar: {
+          type: "text"
+        },
+        scale: {
+          type: "number"
+        },
+        parts: {
+          type: "array",
+          arrayFields: {
+            key: { 
+              type: "text" 
+            },
+            position: {
+              type: "text"
+            },
+            title: { 
+              type: "text" 
+            },
+            value: {
+              type: "textarea"
+            },
+            // pos: {
+            //   type: "text"
+            // },
+            // rot: {
+            //   type: "text"
+            // },
+            // scale: {
+            //   type: "number"
+            // },
+          },
+        }
+      },
+      defaultProps: {
+        src: "/plantCell_LODx.fbx",
+        pos: "0,0,0",
+        rot: "45,0,0",
+        scale: 0.1,
+        parts: [
+          {
+            "key": "key",
+            "value": "value"
+          },
+        ]
+      },
+      render: ({ src, parts, pos, rot, tar, scale }) => {
+        return <Model3D src={src} parts={parts} pos={pos} rot={rot} tar={tar} scale={scale} />;
       }, 
       
     },

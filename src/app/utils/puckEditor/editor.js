@@ -30,6 +30,7 @@ const Editor = ({data, setData}) => {
             <Drawer.Item name="TabbedView" index={4} />
             <Drawer.Item name="Accordion" index={5} />
             <Drawer.Item name="RiveAnim" index={6} />
+            <Drawer.Item name="Model3D" index={7} />
             </div>
           </Drawer>
         </div>

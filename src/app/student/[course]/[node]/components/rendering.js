@@ -42,7 +42,7 @@ const Rendering = ({data, params, chapters, currentNode, addCourseProgress, chap
           <ProgressBar isLabelVisible={false} bgColor='#e7b3ff' height='5px' completed={((slide+1)/(data.length))*100} />
         </div>
 
-        <div style={{height:"75vh", display:"flex",justifyContent:"center", alignItems:"center", padding:"10%"}}>
+        <div style={{height:"75vh", display:"flex",justifyContent:"center", alignItems:"center", padding:"5%"}}>
           {config.components[data[slide].type].render(data[slide].props)}
           
         </div>
