@@ -46,6 +46,12 @@
   margin: 5px 0;
 }
 
+.signInOut {
+  border:none; 
+  background-color: white;
+  cursor:pointer;
+}
+
 .goToCourses {
   margin-top: 10px;
   background-color: #9757b5;

@@ -2,9 +2,9 @@
 import { signOut } from 'next-auth/react';
 import React from 'react'
 
-const SignOut = ({stl}) => {
+const SignOut = ({className}) => {
   return (
-    <button  style={stl} onClick={() => signOut()}>Sign out</button>
+    <div  className={className} onClick={() => signOut()}>Sign out</div>
   )
 }
 

@@ -4,9 +4,9 @@ import React from 'react'
 import Logo from '../../lib/logo.png'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../utils/auth'
-import { signIn, signOut } from 'next-auth/react'
 import { SignInStudent } from '../signIn'
 import SignOut from '../signOut'
+import styles from '../page.module.css'
 
 const Navbar = async() => {
   const session = await getServerSession(authOptions);
@@ -39,9 +39,9 @@ const Navbar = async() => {
       <div style={{marginRight:"20px", padding:"15px"}}>
         {
           !session?
-          <SignInStudent stl={{border:"none", backgroundColor:"white", cursor:"pointer"}} />
+          <SignInStudent className={styles.signInOut} />
           :
-          <SignOut stl={{border:"none", backgroundColor:"white", cursor:"pointer"}} />
+          <SignOut className={styles.signInOut} />
         }
         
       </div>
