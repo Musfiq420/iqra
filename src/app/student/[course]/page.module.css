@@ -1,0 +1,93 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding: 20px;
+    padding-top: 50px;
+  }
+  
+  .courseDetails {
+    flex: 1;
+    padding: 20px;
+    border-right: 1px solid lightgray;
+    overflow-y: auto;
+  }
+  
+  .courseContent {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+  }
+  
+  .courseImage {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+  }
+  
+  .category {
+    color: #7a4e8f;
+    opacity: 0.7;
+  }
+  
+  .title {
+    padding-top: 5px;
+    padding-bottom: 10px;
+  }
+  
+  .infoRow {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 5px;
+  }
+  
+  .about {
+    color: #383838;
+  }
+  
+  .completedMessage {
+    padding: 20px;
+    /* margin-bottom: 20px; */
+    border-bottom: 1px solid lightgray;
+    text-align: center;
+  }
+  
+  .signInMessage {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .chapter {
+    margin: 10px 0;
+    padding: 10px;
+    border-bottom: 1px solid lightgray;
+  }
+  
+  .chapterTitle {
+    font-weight: bold;
+  }
+  
+  .completedLink,
+  .activeLink, .certificateLink {
+    text-decoration: underline;
+    color: #9757b5;
+  }
+  
+  .lockedTitle {
+    color: gray;
+    opacity: 0.6;
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      flex-direction: column;
+    }
+  
+    .courseDetails,
+    .courseContent {
+      width: 100%;
+    }
+  }
+  

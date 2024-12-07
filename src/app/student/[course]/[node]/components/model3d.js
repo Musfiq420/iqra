@@ -5,6 +5,7 @@ import { OrbitControls, PerspectiveCamera, Text } from '@react-three/drei';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import * as THREE from 'three';
 import MdText from '@/app/utils/mdText';
+import styles from './model3d.module.css';
 
 function animateTransform(start, end, duration, callback) {
   const startTime = performance.now();
@@ -235,7 +236,7 @@ function convertToXYZ(str) {
   return cor;
 }
 
-const Model3D = ({src, parts, pos, rot, tar, scale}) => {
+const Model3D = ({ src, parts, pos, rot, tar }) => {
   const [selectedPart, setSelectedPart] = useState(parts[0]);
 
   const initialState = {
@@ -245,30 +246,29 @@ const Model3D = ({src, parts, pos, rot, tar, scale}) => {
   };
 
   return (
-    <div style={{display:"flex", height:"400px", width:"100%", padding:"10px"}}>
-      <div style={{backgroundColor:"#F2F2F2", width:"50%", padding:"5px", borderRadius:"5px", margin:"5px"}}>
+    <div className={styles.container}>
+      <div className={styles.canvasContainer}>
         <Canvas3D src={src} selectedPart={selectedPart} initialState={initialState} />
       </div>
-      
-      <div style={{backgroundColor:"#F2F2F2", width:"50%", padding:"15px", borderRadius:"5px", margin:"5px"}}>
-        <div style={{display:"flex", flexWrap:"wrap", marginBottom:"10px"}}>
-          {parts.map((e) => <div 
-            style={{ color:e.key==selectedPart.key?"white":"black", backgroundColor:e.key==selectedPart.key?"#9757b5":"lightgray", opacity:0.7, padding:"5px", margin:"2px", borderRadius:"3px", fontSize:"10px", cursor:"pointer"}}
-            onClick={() => {
-              setSelectedPart(e);
-            }}
+      <div className={styles.infoContainer}>
+        <div className={styles.partButtons}>
+          {parts.map((part) => (
+            <div
+              key={part.key}
+              className={`${styles.partButton} ${selectedPart.key === part.key ? styles.selected : styles.default}`}
+              onClick={() => setSelectedPart(part)}
             >
-            {e.title}
-          </div>)}
+              {part.title}
+            </div>
+          ))}
         </div>
-        <div style={{ height:"200px"}}>
-            <MdText>
-              {selectedPart.value}
-            </MdText>
+        <div className={styles.mdTextContainer}>
+          <MdText>{selectedPart.value}</MdText>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
+
 
 export default Model3D

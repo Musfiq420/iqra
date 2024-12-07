@@ -197,8 +197,9 @@ body`,
       },
       defaultProps: {
         src: "/plantCell_LODx.fbx",
-        pos: "0,0,0",
+        pos: "-0.11960111237542675,15.576228752000784,18.938830404974183",
         rot: "45,0,0",
+        tar: "0,0,0",
         scale: 0.1,
         parts: [
           {

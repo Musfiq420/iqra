@@ -1,14 +1,13 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+import Image from 'next/image';
+import styles from './page.module.css';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './utils/auth';
 import Link from 'next/link';
-import { SignInStudent, SignInTeacher } from './signIn';
+import { SignInStudent } from './signIn';
 import Anim from '../lib/anim.gif';
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
-  console.log(session)
 
   return (
     <>
@@ -18,44 +17,37 @@ export default async function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <main className={styles.main} style={{ backgroundColor:"white"}}>
-        <div style={{marginTop:'60px', width:"100%", display:"flex", flexDirection:"row", justifyContent:"space-between"}} >
-          <div style={{width:"50%"}}>
-            <h1 style={{color:"#2b1c33"}}>ক্লাসের বোরিং পড়াগুলো<br/> শিখো এবার <span style={{color:"#9757b5"}}>খেলতে খেলতে</span></h1>
-            <br />
-            <p style={{fontSize:"16px", color:'#5e3770'}}>Digital Platform for Islamic Education. Our aim is to provide distance education to 
+      <main className={styles.main}>
+        <div className={styles.container}>
+          <div className={styles.textSection}>
+            <h1>
+              ক্লাসের বোরিং পড়াগুলো<br /> শিখো এবার <span>খেলতে খেলতে</span>
+            </h1>
+            <p>
+              Digital Platform for Islamic Education. Our aim is to provide distance education to 
               the muslims within the guidance of shariah. The platform to gain ilm for muslim ummah.
-
-              
             </p>
-            
-            <div style={{marginTop:"40px"}} >
-            {!session ?
-              <div>
-              <SignInStudent stl={{ border:"2px solid lightgray", padding:"10px", backgroundColor:"white", cursor:"pointer", borderRadius:"5px"}} />
-            </div>
-              :
-              <div style={{color:"gray"}}>
-                <p style={{fontSize:"12px"}}>Signed in as</p>
-                <p>{session.user.name}</p>
-              </div>
-              
-            }
-              <Link href="/student">
-                <div style={{width:'min-content', textWrap:'nowrap', marginTop:"5px",backgroundColor:"#9757b5", padding:"10px", color:"white", cursor:"pointer", borderRadius:"5px", }}>
-                  Go to courses
+            <div className={styles.actions}>
+              {!session ? (
+                <div>
+                  <SignInStudent stl={styles.button} />
                 </div>
+              ) : (
+                <div style={{ color: 'gray' }}>
+                  <p style={{ fontSize: '12px' }}>Signed in as</p>
+                  <p>{session.user.name}</p>
+                </div>
+              )}
+              <Link href="/student">
+                <div className={styles.goToCourses}>Go to courses</div>
               </Link>
             </div>
-            
           </div>
-          <div style={{ border:"1px solid lightgray", borderRadius:"5px"}}>
-            <Image src={Anim} width={300} height={300} />
+          <div className={styles.imageWrapper}>
+            <Image src={Anim} alt="Animation" width={300} height={300} />
           </div>
         </div>
-        
-        
       </main>
     </>
-  )
+  );
 }

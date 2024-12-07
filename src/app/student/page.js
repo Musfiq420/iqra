@@ -1,21 +1,19 @@
 import db from '@/lib/mongodb';
-import React from 'react'
+import React from 'react';
 import CourseList from './components/courseList';
+import styles from './page.module.css';
 
-const Student = async() => {
-  const courses = await db.collection("courses").find({"published":true}).toArray();
+const Student = async () => {
+  const courses = await db.collection("courses").find({ published: true }).toArray();
+
   return (
-    <div style={{marginLeft:"80px", marginTop:"40px"}}>
-      <br />
-      <br />
-      <div style={{padding:"10px", marginTop:"10px", marginBottom:"10px"}}>
-        <p style={{ fontSize:24}}>Browse Courses</p>
+    <div className={styles.studentContainer}>
+      <div>
+        <p className={styles.browseTitle}>Browse Courses</p>
       </div>
-      
-     
       <CourseList courses={courses} />
     </div>
-  )
-}
+  );
+};
 
-export default Student
+export default Student;
