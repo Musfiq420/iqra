@@ -22,7 +22,8 @@ const Course = async ({ params }) => {
   const session = await getServerSession(authOptions);
   const student = session ? await db.collection("students").findOne({ email: session.user.email }) : null;
 
-  const completed = student?.courses?.[params.course] ?? -1;
+  // const completed = student?.courses?.[params.course] ?? 0;
+  const completed = student?student.courses&&student.courses[params.course]?student.courses[params.course]:0:-1;
   const chapters = topicList(nodes, null, 0, []);
   const chaptersFinal = addFileNo(chapters);
   const totalFiles = totalFileNo(chapters);
