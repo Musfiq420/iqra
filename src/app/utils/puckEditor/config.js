@@ -1,3 +1,6 @@
+import RenderRTE from "@/app/richtext/renderRTE";
+import RichTextExample from "@/app/richtext/rte";
+import RichTextReadOnly from "@/app/richtext/rteReadOnly";
 import Accordion from "@/app/student/[course]/[node]/components/accordion";
 import IFrame from "@/app/student/[course]/[node]/components/iframe";
 import ImageHotspot from "@/app/student/[course]/[node]/components/image_hotspot";
@@ -33,6 +36,24 @@ body`,
       </div>;
       },
       
+    },
+    
+    Article: {
+      fields: {
+        content: {
+          type: 'custom',
+          render: ({ name, value, onChange }) => (
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px' }}>{name}</label>
+              <RichTextExample value={value} onChange={onChange} />
+            </div>
+          ),
+        },
+      },
+      render: ({ content }) => {
+        
+        return <RenderRTE value={content?JSON.parse(content):[]} />
+      }
     },
     IFrame: {
       fields: {
