@@ -1,6 +1,5 @@
 import RenderRTE from "@/app/richtext/renderRTE";
 import RichTextExample from "@/app/richtext/rte";
-import RichTextReadOnly from "@/app/richtext/rteReadOnly";
 import Accordion from "@/app/student/[course]/[node]/components/accordion";
 import IFrame from "@/app/student/[course]/[node]/components/iframe";
 import ImageHotspot from "@/app/student/[course]/[node]/components/image_hotspot";
