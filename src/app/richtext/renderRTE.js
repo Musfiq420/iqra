@@ -1,6 +1,8 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
+import katex from 'katex'
+import 'katex/dist/katex.min.css' 
 
 // Element component to map block elements
 const Element = ({ attributes, children, element }) => {
@@ -42,6 +44,31 @@ const Element = ({ attributes, children, element }) => {
           {children}
         </ol>
       );
+      case 'image':
+        return (
+          <div style={{ textAlign: element.align }}>
+            <div>
+            <img
+              src={element.url}
+              alt={element.alt || 'Image'}
+              style={{ maxWidth: '100%', height: 'auto' }}
+              {...attributes}
+            />
+            </div>
+            <p style={{fontStyle:'italic', fontSize:14}}>
+            {children}
+            </p>
+          </div>
+        )
+        case 'link':
+      return (
+        <a href={element.url} {...attributes} style={{ color: 'blue', textDecoration: 'underline' }}>
+          {children}
+        </a>
+      )
+      case 'math':
+      return <div style={{fontSize:20}} dangerouslySetInnerHTML={{ __html: katex.renderToString(element.latex?element.latex:"", { throwOnError: false }) }} />;
+
     default:
       return (
         <p style={style} {...attributes}>

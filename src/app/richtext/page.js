@@ -1,15 +1,17 @@
 'use client'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import isHotkey from 'is-hotkey'
-import { Editable, withReact, useSlate, Slate, useSlateStatic } from 'slate-react'
+import { Editable, withReact, useSlate, Slate, useSlateStatic, ReactEditor } from 'slate-react'
 import {
   Editor,
   Transforms,
   createEditor,
   Element as SlateElement,
+  Path,
 } from 'slate'
 import { withHistory } from 'slate-history'
 import { Button, Icon, Toolbar } from './components'
+import MathInput from 'react-math-keyboard';
 
 const HOTKEYS = {
   'mod+b': 'bold',
@@ -37,6 +39,8 @@ const RichTextExample = () => {
   }, [])
   
   return (
+    <>
+    
     <Slate editor={editor} initialValue={initialValue}>
       <Toolbar>
         <MarkButton format="bold" icon="format_bold" />
@@ -52,6 +56,8 @@ const RichTextExample = () => {
         <BlockButton format="center" icon="format_align_center" />
         <BlockButton format="right" icon="format_align_right" />
         <BlockButton format="justify" icon="format_align_justify" />
+        <BlockButton format="math" icon="functions" />
+
         <InsertImageButton />
         <LinkButton />
       </Toolbar>
@@ -68,7 +74,7 @@ const RichTextExample = () => {
                   const [match] = Array.from(
                     Editor.nodes(editor, {
                       at: selection,
-                      match: n => SlateElement.isElement(n) && n.type === 'image',
+                      match: n => SlateElement.isElement(n) && (n.type === 'image' || n.type === 'math'),
                     })
                   )
                   if (match) {
@@ -81,6 +87,21 @@ const RichTextExample = () => {
                   }
                 }
               }
+
+              // Handle backspace to remove math nodes
+            if (event.key === 'Backspace') {
+              const [mathNode] = Array.from(
+                Editor.nodes(editor, {
+                  match: n => n.type === 'math',
+                })
+              )
+
+              if (mathNode) {
+                event.preventDefault()
+                Transforms.removeNodes(editor, { at: ReactEditor.findPath(editor, mathNode[0]) })
+                return
+              }
+            }
           for (const hotkey in HOTKEYS) {
             if (isHotkey(hotkey, event)) {
               event.preventDefault()
@@ -91,6 +112,7 @@ const RichTextExample = () => {
         }}
       />
     </Slate>
+    </>
   )
 }
 const toggleBlock = (editor, format) => {
@@ -185,6 +207,11 @@ const isLinkActive = editor => {
       match: n => !Editor.isEditor(n) && n.type === 'link',
     })
   }
+
+  const insertMath = (editor, latex = '\\frac{1}{2}') => {
+    const math = { type: 'math', latex, children: [{ text: '' }] };
+    Transforms.insertNodes(editor, math);
+  };
   
 
 
@@ -249,6 +276,8 @@ const Element = ({ attributes, children, element }) => {
           {children}
         </a>
       )
+      case 'math':
+      return <MathElement {...attributes} element={element}>{children}</MathElement>;
     default:
       return (
         <p style={style} {...attributes}>
@@ -283,6 +312,7 @@ const BlockButton = ({ format, icon }) => {
       )}
       onMouseDown={event => {
         event.preventDefault()
+        
         toggleBlock(editor, format)
       }}
     >
@@ -347,6 +377,50 @@ const InsertImageButton = () => {
       </Button>
     )
   }
+
+  const MathElement = ({ attributes, element, children }) => {
+    const editor = useSlateStatic();
+    const [latex, setLatex] = useState(element.latex || '');
+  
+    const updateLatex = (newLatex) => {
+      setLatex(newLatex);
+      const path = ReactEditor.findPath(editor, element);
+      Transforms.setNodes(editor, { latex: newLatex }, { at: path });
+    };
+  
+    const handleKeyDown = (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault(); // Prevents the default Enter behavior (which creates a new block)
+  
+        // Get the current path of the math element
+        const path = ReactEditor.findPath(editor, element);
+        
+        // Check if there's a next node to move the cursor to
+        const nextNode = Editor.after(editor, path);
+  
+        if (nextNode) {
+          // If there's a next node, move the cursor there (out of the math element)
+          Transforms.select(editor, nextNode);
+        } else {
+          // If no next node exists (end of the document), insert a new paragraph
+          Transforms.insertNodes(editor, { type: 'paragraph', children: [{ text: '' }] });
+        }
+      }
+    };
+  
+    return (
+      <div {...attributes}>
+        <MathInput
+          setValue={updateLatex}
+          value={latex}
+          onKeyDown={handleKeyDown} // Handle Enter to exit math block
+        />
+        {children}
+      </div>
+    );
+  };
+  
+  
   
 
 

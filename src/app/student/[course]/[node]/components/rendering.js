@@ -32,7 +32,7 @@ const Rendering = ({data, params, chapters, currentNode, addCourseProgress, chap
 
   return (
     <div>
-        <div style={{width:"100%", height:"5vh",  padding:'10px'}}>
+        <div style={{width:"100%", height:"10vh",  padding:'10px'}}>
           <div style={{display:"flex", flexDirection:"row", alignItems:"center", fontSize:24, paddingBottom:'5px'}}>
             <div style={{paddingTop:"6px", paddingRight:"5px"}}>
               <CiStickyNote color='gray' />
@@ -41,10 +41,10 @@ const Rendering = ({data, params, chapters, currentNode, addCourseProgress, chap
           </div>
           <ProgressBar isLabelVisible={false} bgColor='#e7b3ff' height='5px' completed={((slide+1)/(data.length))*100} />
         </div>
-
-        <div style={{height:"75vh", display:"flex",justifyContent:"center", alignItems:"center", padding:"5%"}}>
-          {config.components[data[slide].type].render(data[slide].props)}
-          
+        <div style={{ height: "70vh", overflowY: "scroll" }}>
+          <div style={{ display: "flex", justifyContent: "start", alignItems: "center", paddingTop: "5%", flexDirection: "column" }}>
+            {config.components[data[slide].type].render(data[slide].props)}
+          </div>
         </div>
         <hr style={{opacity:0.7}} />
         <div style={{display:"flex", flexDirection:"row",height:"10vh", justifyContent:"center" }}>

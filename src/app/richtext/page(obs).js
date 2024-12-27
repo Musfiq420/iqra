@@ -1,18 +1,7 @@
 'use client'
-import React, { useCallback, useMemo } from 'react'
-import imageExtensions from 'image-extensions'
-import isUrl from 'is-url'
+import React, { useCallback, useMemo, useState } from 'react'
 import isHotkey from 'is-hotkey'
-import {
-  Slate,
-  Editable,
-  useSlateStatic,
-  useSelected,
-  useFocused,
-  withReact,
-  ReactEditor,
-  useSlate,
-} from 'slate-react'
+import { Editable, withReact, useSlate, Slate, useSlateStatic, ReactEditor } from 'slate-react'
 import {
   Editor,
   Transforms,
@@ -21,7 +10,7 @@ import {
 } from 'slate'
 import { withHistory } from 'slate-history'
 import { Button, Icon, Toolbar } from './components'
-import { css } from '@emotion/css'
+import MathInput from 'react-math-keyboard'
 
 const HOTKEYS = {
   'mod+b': 'bold',
@@ -33,16 +22,34 @@ const LIST_TYPES = ['numbered-list', 'bulleted-list']
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
 
 
-const RichTextExample = () => {
+const RichTextExample = ({ value, onChange }) => {
   const renderElement = useCallback(props => <Element {...props} />, [])
   const renderLeaf = useCallback(props => <Leaf {...props} />, [])
-  const editor = useMemo(
-    () => withImages(withHistory(withReact(createEditor()))),
-    []
-  )
+  const editor = useMemo(() => {
+    const editor = withHistory(withReact(createEditor()))
+    const { isInline } = editor
+  
+    // Mark 'link' elements as inline
+    editor.isInline = element => {
+      return element.type === 'link' ? true : isInline(element)
+    }
+  
+    return editor
+  }, [])
+
+  const handleChange = useCallback(
+      (newValue) => {
+        const serializedValue = JSON.stringify(newValue);
+        if (serializedValue !== value) { // Prevent redundant updates
+          onChange(serializedValue);
+        }
+      },
+      [onChange, value]
+    );
+  
   return (
-    <div style={{paddingTop:"70px"}}>
-    <Slate editor={editor} initialValue={initialValue}>
+    <Slate editor={editor} initialValue={value ? JSON.parse(value) : [{ type: 'paragraph', children: [{ text: 'Hello' }] }]}
+      onChange={handleChange} >
       <Toolbar>
         <MarkButton format="bold" icon="format_bold" />
         <MarkButton format="italic" icon="format_italic" />
@@ -57,7 +64,9 @@ const RichTextExample = () => {
         <BlockButton format="center" icon="format_align_center" />
         <BlockButton format="right" icon="format_align_right" />
         <BlockButton format="justify" icon="format_align_justify" />
+        <BlockButton format="math" icon="functions" />
         <InsertImageButton />
+        <LinkButton />
       </Toolbar>
       <Editable
         renderElement={renderElement}
@@ -66,6 +75,40 @@ const RichTextExample = () => {
         spellCheck
         autoFocus
         onKeyDown={event => {
+            if (event.key === 'Enter') {
+                const { selection } = editor
+                if (selection) {
+                  const [match] = Array.from(
+                    Editor.nodes(editor, {
+                      at: selection,
+                      match: n => SlateElement.isElement(n) && (n.type === 'image' || n.type === 'math'),
+                    })
+                  )
+                  if (match) {
+                    event.preventDefault()
+                    Transforms.insertNodes(editor, {
+                      type: 'paragraph',
+                      children: [{ text: '' }],
+                    })
+                    return
+                  }
+                }
+              }
+
+              if (event.key === 'Backspace') {
+                            const [mathNode] = Array.from(
+                              Editor.nodes(editor, {
+                                match: n => n.type === 'math',
+                              })
+                            )
+              
+                            if (mathNode) {
+                              event.preventDefault()
+                              Transforms.removeNodes(editor, { at: ReactEditor.findPath(editor, mathNode[0]) })
+                              return
+                            }
+                          }
+
           for (const hotkey in HOTKEYS) {
             if (isHotkey(hotkey, event)) {
               event.preventDefault()
@@ -76,139 +119,8 @@ const RichTextExample = () => {
         }}
       />
     </Slate>
-    </div>
   )
 }
-
-
-const withImages = editor => {
-  const { insertData, isVoid } = editor
-  editor.isVoid = element => {
-    return element.type === 'image' ? true : isVoid(element)
-  }
-  editor.insertData = data => {
-    const text = data.getData('text/plain')
-    const { files } = data
-    if (files && files.length > 0) {
-      for (const file of files) {
-        const reader = new FileReader()
-        const [mime] = file.type.split('/')
-        if (mime === 'image') {
-          reader.addEventListener('load', () => {
-            const url = reader.result
-            insertImage(editor, url)
-          })
-          reader.readAsDataURL(file)
-        }
-      }
-    } else if (isImageUrl(text)) {
-      insertImage(editor, text)
-    } else {
-      insertData(data)
-    }
-  }
-  return editor
-}
-
-const insertImage = (editor, url) => {
-  const text = { text: '' }
-  const image = { type: 'image', url, children: [text] }
-  Transforms.insertNodes(editor, image)
-  Transforms.insertNodes(editor, {
-    type: 'paragraph',
-    children: [{ text: '' }],
-  })
-}
-
-const Image = ({ attributes, children, element }) => {
-  const editor = useSlateStatic()
-  let path
-  try {
-    path = ReactEditor.findPath(editor, element)
-  } catch (err) {
-    console.error('Error finding path for element:', element, err)
-    return null
-  }
-  const selected = useSelected()
-  const focused = useFocused()
-
-  if (!element || !path) {
-    console.error('Invalid element or path in Image component:', element)
-    return null
-  }
-
-  return (
-    <div style={{ textAlign: 'center' }}>
-          <img
-            src={element.url}
-            // alt={element.alt || 'Image'}
-            style={{ maxWidth: '100%', height: 'auto' }}
-            {...attributes}
-          />
-          {children}
-        </div>
-    // <div {...attributes}>
-    //   {children}
-    //   <div
-    //     contentEditable={false}
-    //     className={css`
-    //       position: relative;
-    //     `}
-    //   >
-    //     <img
-    //       src={element.url}
-          
-    //       className={css`
-    //         display: block;
-    //         max-width: 100%;
-    //         max-height: 20em;
-    //         box-shadow: ${selected && focused ? '0 0 0 3px #B4D5FF' : 'none'};
-    //       `}
-    //     />
-    //     <Button
-    //       active
-    //       onClick={() => Transforms.removeNodes(editor, { at: path })}
-    //       className={css`
-    //         display: ${selected && focused ? 'inline' : 'none'};
-    //         position: absolute;
-    //         top: 0.5em;
-    //         left: 0.5em;
-    //         background-color: white;
-    //       `}
-    //     >
-    //       <Icon>delete</Icon>
-    //     </Button>
-    //   </div>
-    // </div>
-  )
-}
-
-const InsertImageButton = () => {
-  const editor = useSlateStatic()
-  return (
-    <Button
-      onMouseDown={event => {
-        event.preventDefault()
-        const url = window.prompt('Enter the URL of the image:')
-        if (url && !isImageUrl(url)) {
-          alert('URL is not an image')
-          return
-        }
-        url && insertImage(editor, url)
-      }}
-    >
-      <Icon>image</Icon>
-    </Button>
-  )
-}
-const isImageUrl = url => {
-  if (!url) return false
-  if (!isUrl(url)) return false
-  const ext = new URL(url).pathname.split('.').pop()
-  return imageExtensions.includes(ext)
-}
-
-
 const toggleBlock = (editor, format) => {
   const isActive = isBlockActive(
     editor,
@@ -266,6 +178,44 @@ const isMarkActive = (editor, format) => {
   const marks = Editor.marks(editor)
   return marks ? marks[format] === true : false
 }
+// link utility functions
+const isLinkActive = editor => {
+    const [link] = Editor.nodes(editor, {
+      match: n => !Editor.isEditor(n) && n.type === 'link',
+    })
+    return !!link
+  }
+  
+  const insertLink = (editor, url) => {
+    if (!url) return
+    const { selection } = editor
+  
+    if (!selection || Editor.string(editor, selection) === '') {
+      // If there's no text selected, insert the link text as the URL itself
+      Transforms.insertNodes(editor, {
+        type: 'link',
+        url,
+        children: [{ text: url }],
+      })
+    } else {
+      // Wrap the selected text with a link
+      Transforms.wrapNodes(
+        editor,
+        { type: 'link', url, children: [] },
+        { split: true }
+      )
+      Transforms.collapse(editor, { edge: 'end' })
+    }
+  }
+  
+  const removeLink = editor => {
+    Transforms.unwrapNodes(editor, {
+      match: n => !Editor.isEditor(n) && n.type === 'link',
+    })
+  }
+  
+
+
 const Element = ({ attributes, children, element }) => {
   const style = { textAlign: element.align }
   switch (element.type) {
@@ -306,7 +256,29 @@ const Element = ({ attributes, children, element }) => {
         </ol>
       )
       case 'image':
-      return <Image attributes={attributes} children={children} element={element} />
+        return (
+          <div style={{ textAlign: element.align }}>
+            <div>
+            <img
+              src={element.url}
+              alt={element.alt || 'Image'}
+              style={{ maxWidth: '100%', height: 'auto' }}
+              {...attributes}
+            />
+            </div>
+            <p style={{fontStyle:'italic', fontSize:14}}>
+            {children}
+            </p>
+          </div>
+        )
+        case 'link':
+      return (
+        <a href={element.url} {...attributes} style={{ color: 'blue', textDecoration: 'underline' }}>
+          {children}
+        </a>
+      )
+      case 'math':
+        return <MathElement {...attributes} element={element}>{children}</MathElement>;  
     default:
       return (
         <p style={style} {...attributes}>
@@ -362,6 +334,94 @@ const MarkButton = ({ format, icon }) => {
     </Button>
   )
 }
+
+const InsertImageButton = () => {
+    const editor = useSlateStatic()
+    return (
+      <Button
+        onMouseDown={event => {
+          event.preventDefault()
+          const url = window.prompt('Enter the URL of the image:')
+          
+          url && insertImage(editor, url)
+        }}
+      >
+        <Icon>image</Icon>
+      </Button>
+    )
+  }
+  
+  // Helper to insert an image
+  const insertImage = (editor, url) => {
+    const image = { type: 'image', url, children: [{ text: '' }] }
+    Transforms.insertNodes(editor, image)
+  }
+
+  const LinkButton = () => {
+    const editor = useSlate()
+    return (
+      <Button
+        onMouseDown={event => {
+          event.preventDefault()
+          const isActive = isLinkActive(editor)
+          if (isActive) {
+            removeLink(editor)
+          } else {
+            const url = window.prompt('Enter the URL of the link:')
+            if (!url) return
+            insertLink(editor, url)
+          }
+        }}
+      >
+        <Icon>link</Icon>
+      </Button>
+    )
+  }
+  
+  const MathElement = ({ attributes, element, children }) => {
+    const editor = useSlateStatic();
+    const [latex, setLatex] = useState(element.latex || '');
+  
+    const updateLatex = (newLatex) => {
+      setLatex(newLatex);
+      const path = ReactEditor.findPath(editor, element);
+      Transforms.setNodes(editor, { latex: newLatex }, { at: path });
+    };
+  
+    const handleKeyDown = (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault(); // Prevents the default Enter behavior (which creates a new block)
+  
+        // Get the current path of the math element
+        const path = ReactEditor.findPath(editor, element);
+        
+        // Check if there's a next node to move the cursor to
+        const nextNode = Editor.after(editor, path);
+  
+        if (nextNode) {
+          // If there's a next node, move the cursor there (out of the math element)
+          Transforms.select(editor, nextNode);
+        } else {
+          // If no next node exists (end of the document), insert a new paragraph
+          Transforms.insertNodes(editor, { type: 'paragraph', children: [{ text: '' }] });
+        }
+      }
+    };
+  
+    return (
+      <div {...attributes}>
+        <MathInput
+          setValue={updateLatex}
+          value={latex}
+          onKeyDown={handleKeyDown} // Handle Enter to exit math block
+        />
+        {children}
+      </div>
+    );
+  };
+
+
+
 const initialValue = [
   {
     type: 'paragraph',
@@ -397,21 +457,11 @@ const initialValue = [
     children: [{ text: 'Try it out for yourself!' }],
   },
   {
-    type: 'paragraph',
-    children: [
-      { text: 'Here is an example of an image below:' },
-    ],
-  },
-  {
     type: 'image',
     url: 'https://via.placeholder.com/300',
+    alt: 'Placeholder Image',
+    align: 'center',
     children: [{ text: '' }],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      { text: 'You can add as many images as you want in your rich text.' },
-    ],
   },
 ]
 export default RichTextExample
