@@ -1,0 +1,28 @@
+._Input_1v7zr_1 {
+    color: var(--puck-color-grey-04);
+    padding: 5px;
+    display: block;
+  }
+  
+  ._Input-label_1v7zr_27 {
+    align-items: center;
+    color: var(--puck-color-grey-04);
+    display: flex
+  ;
+    padding-bottom: 2px;
+    font-size: var(--puck-font-size-xxs);
+    font-weight: 600;
+  }
+  
+  ._Input-input_1v7zr_46 {
+    background: var(--puck-color-white);
+    border-width: 1px;
+    border-style: solid;
+    border-color: lightgray;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 3px;
+    transition: border-color 50ms ease-in;
+    width: 100%;
+  }

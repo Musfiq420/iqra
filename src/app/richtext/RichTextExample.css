@@ -1,0 +1,35 @@
+/* Slate Container */
+.slate-container {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #fff;
+    height: 100%; /* Adjust to fit your layout */
+    overflow: hidden; /* Prevents content overflow */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Toolbar Styling */
+  .toolbar {
+    position: sticky; /* Sticks within the parent container */
+    top: 0;
+    background-color: #f9f9f9;
+    padding: 10px;
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid #ddd;
+    z-index: 100; /* Ensures it stays above other elements */
+    overflow-x: auto;
+}
+  
+  /* Editable Container */
+  .editable-container {
+    flex: 1; /* Allows the editable container to take remaining space */
+    overflow-y: auto; /* Enables scrolling for the editable content */
+    margin-top: 10px; /* Adds some spacing between the toolbar and content */
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+  }
+  

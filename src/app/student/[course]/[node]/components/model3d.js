@@ -173,12 +173,12 @@ const Scene = ({ src, selectedPart, initialState }) => {
     0x98fb98, // Pale Green
     0xffffe0, // Light Yellow
     0xffb6c1, // Light Pink
-    0xf4a460, // Sandy Brown
+    0xccf2ff, // Icy Sky
     0x00fa9a, // Spring Green
     0x6495ed, // Cornflower Blue
     0xe6e6fa, // Lavender
     0xffdab9, // Peach Puff
-    0x8fbc8f, // Dark Sea Green
+    0xffd9b3, // Peach Cream
     0x4682b4, // Steel Blue
     0xff7f50, // Coral
     0xd8bfd8, // Thistle
@@ -189,6 +189,45 @@ const Scene = ({ src, selectedPart, initialState }) => {
     0xffd700, // Bright Yellow
     0x87ceeb, // Sky Blue
   ];
+
+//   const colors = [
+//     0xccf2ff, // Icy Sky
+//     0xd6ccff, // Lavender Cloud
+//     0xccffd9, // Mint Frost
+// 0x8fbc8f, // Dark Sea Green
+//     0xffe6e6, // Blush Pink
+//     0xffd9b3, // Peach Cream
+//     // 0xfff4cc, // Buttercream
+//     'white',
+//     0xffccd9, // Rosy Cheeks
+//     0xfffacd, // Vanilla Glow
+//     0xd1ffd6, // Spring Mist
+//     0xb3ecff, // Aqua Frost
+//     0xe6d9ff, // Soft Violet
+//     0xffebf0, // Cotton Candy
+//     0xfff9e6, // Champagne Light
+//     0xe0ffe6, // Pale Mint
+//     0xd9f2ff, // Glacier Blue
+//     0xf7e6ff, // Fairy Dust
+//     0xffe0e0, // Coral Bloom
+//     0xffffe6, // Pale Sunshine
+//     0xccffe6, // Seafoam
+//     0xccecff, // Periwinkle Glow
+//     0xf4e0ff, // Lilac Whisper
+//     0xffe6f7, // Petal Pink
+//     0xfaf4e1, // Ivory Cream
+//     0xe6ffe6, // Meadow Dew
+//     0xe1f5ff, // Frosty Sky
+//     0xf9e6ff, // Orchid Ice
+//     0xfff2f2, // Pearl Rose
+//     0xfffae6, // Golden Haze
+//     0xdfffe1, // Morning Grass
+//     0xe6f2ff, // Crystal Pool
+//     0xfde6ff, // Lavender Dreams
+// ];
+
+  
+  
 
   return (
     <>
@@ -216,7 +255,7 @@ const Canvas3D = ({src, selectedPart, initialState}) => {
         makeDefault // Makes this the default camera
         position={initialState.position}// Initial rotation
         />
-        <ambientLight intensity={0.5} />
+        <ambientLight intensity={1.5} />
         <directionalLight position={[2, 2, 2]} />
         <Scene 
           src={src}
