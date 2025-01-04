@@ -1,8 +1,10 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import katex from 'katex'
-import 'katex/dist/katex.min.css' 
+import { addStyles, StaticMathField } from 'react-mathquill'
+
+addStyles()
+
 
 // Element component to map block elements
 const Element = ({ attributes, children, element }) => {
@@ -60,21 +62,42 @@ const Element = ({ attributes, children, element }) => {
             </p>
           </div>
         )
-        case 'link':
+      case 'link':
       return (
         <a href={element.url} {...attributes} style={{ color: 'blue', textDecoration: 'underline' }}>
           {children}
         </a>
       )
       case 'math':
-      return <div style={{fontSize:20}} dangerouslySetInnerHTML={{ __html: katex.renderToString(element.latex?element.latex:"", { throwOnError: false }) }} />;
-
+      return <StaticMathField>{element.latex}</StaticMathField>
+      // return <div style={{fontSize:20}} dangerouslySetInnerHTML={{ __html: katex.renderToString(element.latex?element.latex:"", { throwOnError: false }) }} />;
+      // case 'paragraph':
+      //   if(element.children[0].text=="")
+      //   {
+      //     console.log("new line")
+      //     return <p>&nbsp;</p>
+      //   }
+      //   else {
+      //     return <p style={style} {...attributes}>
+      //     {children}
+      //   </p>
+      //   }
     default:
-      return (
-        <p style={style} {...attributes}>
-          {children}
-        </p>
-      );
+      if(element.children.length == 1 && element.children[0].text=="")
+          {
+            console.log("new line")
+            return <p>&nbsp;</p>
+          }
+          else {
+            return <p style={style} {...attributes}>
+            {children}
+          </p>
+          }
+      // return (
+      //   <p style={style} {...attributes}>
+      //     {children}
+      //   </p>
+      // );
   }
 };
 
@@ -92,6 +115,12 @@ const Leaf = ({ attributes, children, leaf }) => {
   if (leaf.underline) {
     children = <u>{children}</u>;
   }
+  if (leaf.color) {
+    children = <span style={{ color: leaf.color }}>{children}</span>;
+  }
+  // if (!children) {
+  //   children = <span>&nbsp;</span>; // Render a non-breaking space for empty lines
+  // }
   return <span {...attributes}>{children}</span>;
 };
 

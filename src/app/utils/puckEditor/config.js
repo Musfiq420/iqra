@@ -37,13 +37,13 @@ body`,
       
     },
     
-    Article: {
+    RichText: {
       fields: {
         content: {
           type: 'custom',
           render: ({ name, value, onChange }) => (
             <div>
-              <label style={{ display: 'block', marginBottom: '8px' }}>{name}</label>
+              {/* <label style={{ display: 'block', marginBottom: '8px' }}>{name}</label> */}
               <RichTextExample value={value} onChange={onChange} />
             </div>
           ),

@@ -24,7 +24,7 @@ const Editor = ({data, setData}) => {
           <Drawer direction='horizontal'>
             <div style={{display:"flex", flexDirection:"row", flexWrap:'wrap'}}>
             <Drawer.Item name="Markdown" index={0} />
-            <Drawer.Item name="Article" index={1} />
+            <Drawer.Item name="RichText" index={1} />
             <Drawer.Item name="IFrame" index={2} />
             <Drawer.Item name="MCQ" index={3} />
             <Drawer.Item name="ImageHotspot" index={4} />
@@ -37,10 +37,10 @@ const Editor = ({data, setData}) => {
         </div>
         <div style={{display:"flex", flexDirection:"row"}}>
           
-          <div style={{width:"50%", height:"50vh", overflowY:"scroll", padding:"10px"}}>
+          <div style={{width:"50%", height:"70vh", overflowY:"scroll", padding:"10px"}}>
             <Puck.Preview />
           </div>
-          <div style={{width:"50%", height:"50vh", overflowY:"scroll"}}>
+          <div style={{width:"50%", height:"70vh", overflowY:"scroll"}}>
             <Puck.Fields />
           </div>
         </div>

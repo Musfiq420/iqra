@@ -11,9 +11,8 @@ import {
 } from 'slate'
 import { withHistory } from 'slate-history'
 import { Button, Icon, Toolbar } from './components'
-import katex from 'katex'
-import 'katex/dist/katex.min.css' 
 import { addStyles, EditableMathField } from 'react-mathquill'
+import './RichTextExample.css';
 addStyles();
 
 
@@ -44,6 +43,7 @@ const RichTextExample = ({ value, onChange }) => {
 
   const handleChange = useCallback(
         (newValue) => {
+          console.log(newValue)
           const serializedValue = JSON.stringify(newValue);
           if (serializedValue !== value) { // Prevent redundant updates
             onChange(serializedValue);
@@ -66,7 +66,8 @@ const RichTextExample = ({ value, onChange }) => {
     
     <Slate editor={editor} initialValue={value ? JSON.parse(value) : [{ type: 'paragraph', children: [{ text: 'Hello' }] }]}
       onChange={handleChange} >
-      <Toolbar>
+      {/* <Toolbar> */}
+      <div className="toolbar">
         <MarkButton format="bold" icon="format_bold" />
         <MarkButton format="italic" icon="format_italic" />
         <MarkButton format="underline" icon="format_underlined" />
@@ -80,6 +81,7 @@ const RichTextExample = ({ value, onChange }) => {
         <BlockButton format="center" icon="format_align_center" />
         <BlockButton format="right" icon="format_align_right" />
         <BlockButton format="justify" icon="format_align_justify" />
+        <ColorPickerButton /> 
         <MathButton />
         {/* <BlockButton format="math" icon="functions" /> */}
         {/* <button
@@ -92,7 +94,9 @@ const RichTextExample = ({ value, onChange }) => {
         </button> */}
         <InsertImageButton />
         <LinkButton />
-      </Toolbar>
+      </div>
+      {/* </Toolbar> */}
+      <div className="editable-container">
       <Editable
         renderElement={renderElement}
         renderLeaf={renderLeaf}
@@ -143,6 +147,7 @@ const RichTextExample = ({ value, onChange }) => {
           }
         }}
       />
+    </div>
     </Slate>
     {/* <MathModal
         isOpen={isModalOpen}
@@ -341,6 +346,9 @@ const Leaf = ({ attributes, children, leaf }) => {
   if (leaf.underline) {
     children = <u>{children}</u>
   }
+  if (leaf.color) {
+    children = <span style={{ color: leaf.color }}>{children}</span>;
+  }
   return <span {...attributes}>{children}</span>
 }
 const BlockButton = ({ format, icon }) => {
@@ -425,6 +433,32 @@ const InsertImageButton = () => {
       </Button>
     )
   }
+
+  const ColorPickerButton = () => {
+    const editor = useSlate();
+  
+    const applyColor = (color) => {
+      Editor.addMark(editor, 'color', color);
+    };
+  
+    return (
+      <Button>
+        <input
+          type="color"
+          style={{
+            cursor: 'pointer',
+            width: '24px', // Adjust size as needed
+            height: '24px',
+            border: 'none',
+            padding: '0',
+            background: 'none',
+          }}
+          onChange={(e) => applyColor(e.target.value)}
+        />
+        
+      </Button>
+    );
+  };
 
   const MathButton = () => {
     const editor = useSlateStatic();
