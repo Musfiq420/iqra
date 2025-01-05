@@ -1,3 +1,9 @@
+// Input Name	                        Rendered Input	              Select Values
+// "Zoom-number-1-100"	              Range input (1 to 100)	
+// "State-select-option1-option2"	    Select input	                0 (option1), 1 (option2)
+
+
+
 'use client'
 import React, { useEffect, useState } from 'react'
 import { useRive } from '@rive-app/react-canvas';
@@ -93,20 +99,26 @@ const RiveComponent = ({src, instruction}) => {
                       />
                     </label>
                   ) : type === 'select' ? (
-                    <label>
-                      {caption || input.name}:
-                      <select
-                        value={inputValues[input.name]}
-                        onChange={(e) => handleInputChange(input.name, parseInt(e.target.value))}
-                      >
-                        {options.map((option, index) => (
-                          <option key={option} value={index}>
-                            {option}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                  ) : type === 'trigger' ? (
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                      {/* <span>{caption || input.name}:</span> */}
+                      {options.map((option, index) => (
+                        <button
+                          key={option}
+                          style={{
+                            border: 'none',
+                            padding: '5px 10px',
+                            backgroundColor: inputValues[input.name] === index ? '#9757b5' : '#ccc',
+                            color: 'white',
+                            cursor: 'pointer',
+                            borderRadius: '5px',
+                          }}
+                          onClick={() => handleInputChange(input.name, index)}
+                        >
+                          {option}
+                        </button>
+                      ))}
+                    </div>
+                  )  : type === 'trigger' ? (
                     <button
                     style={{border:'none',margin:"10px", padding:"5px", paddingLeft:"20px", paddingRight:"20px", backgroundColor:"#9757b5", color:"white", cursor:"pointer", borderRadius:"5px"}}
                      onClick={() => handleTrigger(input.name)}>
