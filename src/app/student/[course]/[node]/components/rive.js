@@ -1,7 +1,3 @@
-// Input Name	                        Rendered Input	              Select Values
-// "Zoom-number-1-100"	              Range input (1 to 100)	
-// "State-select-option1-option2"	    Select input	                0 (option1), 1 (option2)
-
 'use client'
 import React, { useEffect, useState } from 'react'
 import { useRive } from '@rive-app/react-canvas';
@@ -64,48 +60,65 @@ const RiveComponent = ({src, instruction}) => {
             options: parts.slice(2), // e.g., ["option1", "option2"]
           };
         }
-        return { type: 'text', caption: name }; // Default fallback
+        return { type: 'trigger', caption: name }; // Default to trigger for other types
+      };
+    
+      const handleTrigger = (name) => {
+        const input = inputs.find((input) => input.name === name);
+        if (input) {
+          console.log(input)
+          input.fire(); // Trigger the Rive input
+        }
       };
     
       return (
-        <div  style={{display:"flex", flexDirection:'column', justifyContent:"center", alignItems:'center'}}>
+        <div style={{ display: "flex", flexDirection: 'column', justifyContent: "center", alignItems: 'center' }}>
           <MdText>{instruction}</MdText>
           <RiveComponent style={{ width: "300px", height: "300px" }} />
           {/* Dynamically render inputs */}
-      {/* Dynamically render inputs */}
-      {inputs.map((input) => {
-        const { type, caption, min, max, options } = parseInputType(input.name);
-        return (
-          <div key={input.name} style={{ margin: '10px 0' }}>
-            <label>
-              {caption || input.name}:
-              {type === 'range' ? (
-                <input
-                  type="range"
-                  min={min}
-                  max={max}
-                  value={inputValues[input.name]}
-                  onChange={(e) => handleInputChange(input.name, parseFloat(e.target.value))}
-                />
-              ) : type === 'select' ? (
-                <select
-                  value={inputValues[input.name]}
-                  onChange={(e) => handleInputChange(input.name, parseInt(e.target.value))}
-                >
-                  {options.map((option, index) => (
-                    <option key={option} value={index}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              ) : null}
-            </label>
-          </div>
-        );
-      })}
-          
+          {inputs.map((input) => {
+            const { type, caption, min, max, options } = parseInputType(input.name);
+            return (
+              <div key={input.name} style={{ margin: '10px 0' }}>
+                
+                  {type === 'range' ? (
+                    <label>
+                      {caption || input.name}:
+                      <input
+                        type="range"
+                        min={min}
+                        max={max}
+                        value={inputValues[input.name]}
+                        onChange={(e) => handleInputChange(input.name, parseFloat(e.target.value))}
+                      />
+                    </label>
+                  ) : type === 'select' ? (
+                    <label>
+                      {caption || input.name}:
+                      <select
+                        value={inputValues[input.name]}
+                        onChange={(e) => handleInputChange(input.name, parseInt(e.target.value))}
+                      >
+                        {options.map((option, index) => (
+                          <option key={option} value={index}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  ) : type === 'trigger' ? (
+                    <button
+                    style={{border:'none',margin:"10px", padding:"5px", paddingLeft:"20px", paddingRight:"20px", backgroundColor:"#9757b5", color:"white", cursor:"pointer", borderRadius:"5px"}}
+                     onClick={() => handleTrigger(input.name)}>
+                      {caption || input.name}
+                    </button>
+                  ) : null}
+                
+              </div>
+            );
+          })}
         </div>
-      )
+      );
 }
 
-export default RiveComponent
+export default RiveComponent;
