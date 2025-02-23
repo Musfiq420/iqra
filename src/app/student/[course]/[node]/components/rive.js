@@ -97,6 +97,7 @@ const RiveComponent = ({src, instruction}) => {
                         value={inputValues[input.name]}
                         onChange={(e) => handleInputChange(input.name, parseFloat(e.target.value))}
                       />
+                      <span> {inputValues[input.name]}</span>
                     </label>
                   ) : type === 'select' ? (
                     <div style={{ display: 'flex', gap: '10px' }}>
