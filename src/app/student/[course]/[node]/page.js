@@ -22,35 +22,41 @@ const Node = async ({ params }) => {
   const chapter = await db.collection('nodes').findOne({ _id: new ObjectId(params.node) });
 
   const session = await getServerSession(authOptions);
-  const student = session
-    ? await db.collection('students').findOne({ email: session.user.email })
-    : null;
+  // const student = session
+  //   ? await db.collection('students').findOne({ email: session.user.email })
+  //   : null;
 
   const chapters = topicList(nodes, null, 0, []);
   const chaptersFinal = addFileNo(chapters);
   const fileNo = getFileIndex(chaptersFinal, params.node);
 
-  const completed = student
-    ? student.courses && student.courses[params.course]
-      ? student.courses[params.course]
-      : 0
-    : -1;
+  // const completed = student
+  //   ? student.courses && student.courses[params.course]
+  //     ? student.courses[params.course]
+  //     : 0
+  //   : -1;
+  const totalFiles = totalFileNo(chapters);
+  const completed = totalFiles
 
   const addCourseProgress = async () => {
-    'use server';
-    if (completed <= fileNo) {
-      await db.collection('students').updateOne(
-        { email: session.user.email },
-        {
-          $set: {
-            [`courses.${params.course}`]: completed + 1,
-          },
-        }
-      );
-    }
-    revalidatePath(`/student/${params.course}`);
-    redirect(`/student/${params.course}`);
-  };
+      'use server';
+  }
+
+  // const addCourseProgress = async () => {
+  //   'use server';
+  //   if (completed <= fileNo) {
+  //     await db.collection('students').updateOne(
+  //       { email: session.user.email },
+  //       {
+  //         $set: {
+  //           [`courses.${params.course}`]: completed + 1,
+  //         },
+  //       }
+  //     );
+  //   }
+  //   revalidatePath(`/student/${params.course}`);
+  //   redirect(`/student/${params.course}`);
+  // };
 
   if (!chapter.data) {
     return (
