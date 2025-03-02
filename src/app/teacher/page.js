@@ -36,9 +36,9 @@ const Teacher = async () => {
             <Link href={`/teacher/addOrEdit/${e._id}`}>
               <button>Edit</button>
             </Link>
-            <Link href={`/teacher/delete/${e._id}`}>
+            {/* <Link href={`/teacher/delete/${e._id}`}>
               <button>Delete</button>
-            </Link>
+            </Link> */}
             
           </td>
         </tr>)
